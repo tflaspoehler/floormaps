@@ -7,19 +7,24 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div class="map-container" id="map-canvas">
-		<svg id="vectors">
+	<div class="map-container" id="map-canvas" ng-app="floorApp" ng-controller="floorAppController as vm">
+		<svg id="floormaps">
 			<g>
-				<circle cx="300" cy="300" r="40" style="fill: rgb(104, 178, 161);">
+				<circle cx="150" cy="150" r="40" style="fill: rgb(104, 178, 161);">
 				</circle>
+				<poly></poly>
 			</g>
 		</svg>
-		<div class="zoom-container">
+		<div class="zoom-menu menu-container">
 			<div class="zoom-button" id="zoom-in">+</div>
 			<div class="zoom-button" id="zoom-out">&ndash;</div>
 		</div>
+		<div class="search-menu menu-container">
+			<div class="search-button" id="search-icon"></div>
+		</div>
 	</div>
-
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.min.js"></script>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="app.js"></script>
 </body>
