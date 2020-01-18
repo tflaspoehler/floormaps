@@ -1,8 +1,8 @@
 
 // add sizing attributes to svg with floor map
 var floormap = d3.select("#floormaps")
-    .attr("width", "100%")
-    .attr("height", "500px")
+//    .attr("width", "100%")
+  //  .attr("height", "500px")
     .attr("preserveAspectRatio", "xMinYMin")
     .attr("viewBox", "0 0 300 300")
     .classed("svg-content", true);
@@ -61,6 +61,13 @@ floorApp = angular.module("floorApp", ['ngRoute'])
 
     getRequest.getData("https://wem.americasmart.com//api/v1.2/FloorPlan?building=1&floorNum=6").then(function(showrooms) {
         vm.mapBackground = showrooms[0].url;
+        vm.showrooms = showrooms[0].booths.map(function(booth) {
+          booth.d = "M" + booth.vertices.map(function(vertex) {
+            return vertex.x + " " + vertex.y;
+          }).join(" L") + "Z";
+          console.log(booth.d);
+          return booth;
+        });
         console.log(showrooms);
     });
 }]);

@@ -58,7 +58,9 @@
 }
 .search-menu {
 	top: 1em;
-	left: 1em;
+	left: 0em;
+	border-left: 0;
+	border-radius: 0 0.5em 0.5em 0;
 }
 #search-icon:after {
 	content: "\2315";

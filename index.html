@@ -10,9 +10,7 @@
 	<div class="map-container" id="map-canvas" ng-app="floorApp" ng-controller="floorAppController as vm">
 		<svg id="floormaps">
 			<g>
-				<circle cx="150" cy="150" r="40" style="fill: rgb(104, 178, 161);">
-				</circle>
-				<poly></poly>
+				<path style="background-color: rgb(0, 0, 0); fill-opacity: 0.2;" ng-repeat="showroom in vm.showrooms" d="//showroom.d//" />
 			</g>
 		</svg>
 		<div class="zoom-menu menu-container">
