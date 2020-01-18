@@ -15,8 +15,14 @@
 ///    .attr("r", 40)
 ///    .style("fill", "#68b2a1");
 
-
-var vector = d3.select("#vectors").call(d3.zoom().on("zoom", function() {
-      vector.select("g").attr("transform", d3.event.transform);
-    }));
-
+var containerWidth = document.getElementById("map-canvas").clientWidth - 2;
+var containerHeight = document.getElementById("map-canvas").clientHeight - 2;
+var vector = d3.select("#vectors")
+  .attr("width", "100%")
+  .attr("height", "500px")
+  .attr("preserveAspectRatio", "xMinYMin")
+  .attr("viewBox", "0 0 300 300")
+  .classed("svg-content", true);
+vector.call(d3.zoom().on("zoom", function() {
+  vector.select("g").attr("transform", d3.event.transform);
+}));

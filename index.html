@@ -7,14 +7,17 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div class="map-container">
-		<svg width="460" height="460" id="vectors">
+	<div class="map-container" id="map-canvas">
+		<svg id="vectors">
 			<g>
 				<circle cx="300" cy="300" r="40" style="fill: rgb(104, 178, 161);">
-					
 				</circle>
 			</g>
 		</svg>
+		<div class="zoom-container">
+			<div class="zoom-button" id="zoom-in">+</div>
+			<div class="zoom-button" id="zoom-out">&ndash;</div>
+		</div>
 	</div>
 
 	<script src="https://d3js.org/d3.v5.min.js"></script>
