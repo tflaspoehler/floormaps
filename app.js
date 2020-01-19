@@ -61,7 +61,7 @@ floorApp = angular.module("floorApp", ['ngRoute'])
     vm.building = 3;
     vm.floor = 6;
     var buildingColor = (vm.building == 1) ? "rgb(0, 0, 255)" : (vm.building == 2) ? "rgb(255, 0, 0)" :  "rgb(0, 255, 0)";
-    getRequest.getData("http://wem.americasmart.com//api/v1.2/FloorPlan?building=" + vm.building + "&floorNum=" + vm.floor).then(function(showrooms) {
+    getRequest.getData("https://wem.americasmart.com//api/v1.2/FloorPlan?building=" + vm.building + "&floorNum=" + vm.floor).then(function(showrooms) {
         
         // add background image
         console.log(showrooms);
