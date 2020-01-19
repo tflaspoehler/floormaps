@@ -13,7 +13,8 @@ html, body {
     vertical-align: top;
     overflow: hidden;
 	position: relative;
-	border: 1px solid #999;
+	border-bottom: 1px solid #333;
+	border-top: 1px solid #333;
 	max-height: 100%;
 	box-sizing: border-box;
 }
@@ -62,6 +63,21 @@ html, body {
 .menu-container > div:hover {
 	color: #000;
 } 
+.floor-title {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 300px;
+	height: 3.5em;
+	text-align: center;
+	padding: 0.25em;
+	background-color: #333;
+	border: 1px solid #333;
+	color: #fff;
+	box-sizing: border-box;
+	cursor: pointer;
+	line-height: 1.5;
+}
 .zoom-menu > div:first-child {
 	border-bottom: 1px solid #999;
 }
@@ -71,13 +87,14 @@ html, body {
 }
 .search-menu {
 	padding: 0em;
-	top: 0em;
+	top: 3.5em;
 	bottom: 0em;
 	left: 0em;
 	width: 300px;
 	max-width: 100%;
 	border-width: 0 1px 0 0 ;
 	border-radius: 0;
+	box-sizing: border-box;
 }
 #search-icon {
 	width: 100%;

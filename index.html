@@ -16,11 +16,14 @@
 			<div class="zoom-button" id="zoom-in">+</div>
 			<div class="zoom-button" id="zoom-out">&ndash;</div>
 		</div>
+		<div class="floor-title">
+			View all buildings &rarr;</br><b>Building //vm.building// - Floor //vm.floor//</b>
+		</div>
 		<div class="search-menu menu-container">
 			<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
 			<ul class="search-list">
 				<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'">
-					B//vm.building// //vm.floor// - //booth.bthTitle//:
+					//booth.bthTitle//:
 					<span ng-repeat="exhibitor in booth.exhibitors">//exhibitor.exhibName// //$last ? '' : ';'//
 					</span>
 				</li>
