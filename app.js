@@ -55,19 +55,41 @@ floorApp = angular.module("floorApp", ['ngRoute'])
 //-----------------------------------------------------------------------//
 //      controller to sends AJAX request and returns it to the view      //
 //-----------------------------------------------------------------------//
-.controller("floorAppController", ['$scope', 'getRequest', function directoryController($scope, getRequest) {
+.controller("floorAppController", ['$scope', '$sce', 'getRequest', function directoryController($scope, $sce, getRequest) {
     
     var vm = this;
-
-    getRequest.getData("https://wem.americasmart.com//api/v1.2/FloorPlan?building=1&floorNum=6").then(function(showrooms) {
-        vm.mapBackground = showrooms[0].url;
-        vm.showrooms = showrooms[0].booths.map(function(booth) {
-          booth.d = "M" + booth.vertices.map(function(vertex) {
-            return vertex.x + " " + vertex.y;
-          }).join(" L") + "Z";
-          console.log(booth.d);
-          return booth;
-        });
+    vm.building = 3;
+    vm.floor = 6;
+    var buildingColor = (vm.building == 1) ? "rgb(0, 0, 255)" : (vm.building == 2) ? "rgb(255, 0, 0)" :  "rgb(0, 255, 0)";
+    getRequest.getData("http://wem.americasmart.com//api/v1.2/FloorPlan?building=" + vm.building + "&floorNum=" + vm.floor).then(function(showrooms) {
+        
+        // add background image
         console.log(showrooms);
+        var scalex = parseFloat(showrooms[0].mapGraphic.width) / parseFloat(showrooms[0].mapWidth);
+        var scaley = parseFloat(showrooms[0].mapGraphic.height) / parseFloat(showrooms[0].mapHeight);
+        var transform = "matrix(" + [showrooms[0].transforms[0].a, showrooms[0].transforms[0].b, showrooms[0].transforms[0].c, showrooms[0].transforms[0].d, showrooms[0].transforms[0].e, showrooms[0].transforms[0].f].join(" ") + ")";
+        console.log(scalex, scaley, showrooms[0].transforms[0].d, showrooms[0].transforms[0].a);
+        floormap.select("g").append("svg:image")
+          .attr("xlink:href", "http:" + showrooms[0].mapGraphic.url)
+          .attr("width", showrooms[0].mapGraphic.width / showrooms[0].transforms[0].d)
+          .attr("height", showrooms[0].mapGraphic.height / showrooms[0].transforms[0].a)
+          .attr("x", -1.0 * showrooms[0].transforms[0].e  / showrooms[0].transforms[0].d)
+          .attr("y", -1.0 * showrooms[0].transforms[0].f / showrooms[0].transforms[0].a);
+
+        // add booths
+        vm.booths = showrooms[0].booths.map(function(booth) {
+          var color = (booth.exhibitors.length > 0) ? buildingColor : "rgb(0, 0, 0)";
+          floormap.select("g").append("path")
+            .attr("d", "M" + booth.vertices.map(function(vertex) {
+              return vertex.x + " " + vertex.y;
+            }).join(" L") + "Z")
+            .attr("class", "booth-path")
+          .attr("fill", color);
+          return booth;
+        }).filter(function(booth) {
+          return (booth.exhibitors.length > 0) ? 1 : 0;
+        });
+        console.log(vm.booths);
+
     });
 }]);

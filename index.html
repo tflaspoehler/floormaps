@@ -10,7 +10,6 @@
 	<div class="map-container" id="map-canvas" ng-app="floorApp" ng-controller="floorAppController as vm">
 		<svg id="floormaps">
 			<g>
-				<path style="background-color: rgb(0, 0, 0); fill-opacity: 0.2;" ng-repeat="showroom in vm.showrooms" d="//showroom.d//" />
 			</g>
 		</svg>
 		<div class="zoom-menu menu-container">
@@ -18,7 +17,14 @@
 			<div class="zoom-button" id="zoom-out">&ndash;</div>
 		</div>
 		<div class="search-menu menu-container">
-			<div class="search-button" id="search-icon"></div>
+			<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
+			<ul class="search-list">
+				<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'">
+					B//vm.building// //vm.floor// - //booth.bthTitle//:
+					<span ng-repeat="exhibitor in booth.exhibitors">//exhibitor.exhibName// //$last ? '' : ';'//
+					</span>
+				</li>
+			</ul>
 		</div>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.js"></script>

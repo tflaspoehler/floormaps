@@ -29,6 +29,14 @@
 .map-container > * {
 	margin: 0 auto;
 }
+.booth-path {
+	stroke: #000;
+	fill-opacity: 0.2;
+	cursor: pointer;
+}
+.booth-path:hover {
+	fill-opacity: 0.5;
+}
 .menu-container {
 	position: absolute;
 	border-radius: 0.5em;
@@ -57,14 +65,54 @@
 	right: 1em;
 }
 .search-menu {
-	top: 1em;
+	padding: 0em;
+	top: 0em;
+	bottom: 0em;
 	left: 0em;
-	border-left: 0;
-	border-radius: 0 0.5em 0.5em 0;
+	width: 300px;
+	max-width: 100%;
+	border-width: 0 1px 0 0 ;
+	border-radius: 0;
 }
-#search-icon:after {
+#search-icon {
+	width: 100%;
+	padding: 0;
+	height: auto;
+}
+#search-icon input {
+	display: inline-block;
+	font-size: 1.25em;
+	padding: 0.5em;
+	border-width: 0 0 1px 0;
+	box-sizing: border-box;
+	width: 100% !important;
+	box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
+}
+/* #search-icon:after {
 	content: "\2315";
-	display: block;
+	display: inline-block;
 	font-size: 2em;
 	transform: translateY(-0.55em) scaleX(-1);
+} */
+.search-list {
+	position: absolute;
+	top: 2.25em;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow-y: scroll;
 }
+.map-container ul {
+	list-style: none;
+	margin-block-start: 0.5em;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+}
+.map-container li {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.5em;
+	border-bottom: 1px solid #ddd;
+} 
