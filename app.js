@@ -68,7 +68,7 @@ floorApp = angular.module("floorApp", ['ngRoute'])
         var scalex = parseFloat(showrooms[0].mapGraphic.width) / parseFloat(showrooms[0].mapWidth);
         var scaley = parseFloat(showrooms[0].mapGraphic.height) / parseFloat(showrooms[0].mapHeight);
         var transform = "matrix(" + [showrooms[0].transforms[0].a, showrooms[0].transforms[0].b, showrooms[0].transforms[0].c, showrooms[0].transforms[0].d, showrooms[0].transforms[0].e, showrooms[0].transforms[0].f].join(" ") + ")";
-        console.log(scalex, scaley, showrooms[0].transforms[0].d, showrooms[0].transforms[0].a);
+
         floormap.select("g").append("svg:image")
           .attr("xlink:href", "http:" + showrooms[0].mapGraphic.url)
           .attr("width", showrooms[0].mapGraphic.width / showrooms[0].transforms[0].d)

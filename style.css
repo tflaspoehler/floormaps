@@ -1,4 +1,8 @@
 
+html, body {
+	margin: 0;
+	padding: 0;
+}
 * {
 	font-family: Helvetica, Sans-Serif;
 }
@@ -11,6 +15,7 @@
 	position: relative;
 	border: 1px solid #999;
 	max-height: 100%;
+	box-sizing: border-box;
 }
 #floormaps {
 	vertical-align: middle;
@@ -20,7 +25,7 @@
   /* set some maximum size (width and height need to match
    * aspect ratio, 1:1 in this case */
   max-width: 100%;
-  max-height: 500px;
+  max-height: 600px;
 }
 .map-container * {
 	user-select: none;
@@ -87,6 +92,7 @@
 	box-sizing: border-box;
 	width: 100% !important;
 	box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
+    outline: none;
 }
 /* #search-icon:after {
 	content: "\2315";
@@ -114,5 +120,9 @@
 	width: 100%;
 	box-sizing: border-box;
 	padding: 0.5em;
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #eee;
+	cursor: pointer;
 } 
+.map-container li:hover {
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
