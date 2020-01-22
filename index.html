@@ -5,29 +5,34 @@
 		AmericasMart Floorplans
 	</title>
 	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" type="text/css" href="https://www.americasmart.com/hubfs/www/includes/css/styles.css">
 </head>
-<body>
-	<div class="map-container" id="map-canvas" ng-app="floorApp" ng-controller="floorAppController as vm">
-		<svg id="floormaps">
-			<g>
-			</g>
-		</svg>
-		<div class="zoom-menu menu-container">
-			<div class="zoom-button" id="zoom-in">+</div>
-			<div class="zoom-button" id="zoom-out">&ndash;</div>
-		</div>
-		<div class="floor-title">
-			View all buildings &rarr;</br><b>Building //vm.building// - Floor //vm.floor//</b>
-		</div>
-		<div class="search-menu menu-container">
-			<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
-			<ul class="search-list">
-				<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'">
-					//booth.bthTitle//:
-					<span ng-repeat="exhibitor in booth.exhibitors">//exhibitor.exhibName// //$last ? '' : ';'//
-					</span>
-				</li>
-			</ul>
+<body class="background">
+	<div class="grid-wrapper container" ng-app="mapApp" ng-controller="mapAppController as vm">
+		<div>
+			<div class="map-container" id="map-canvas">
+				<svg id="floormaps">
+					<g>
+					</g>
+				</svg>
+				<div class="zoom-menu menu-container">
+					<div class="zoom-button" id="zoom-in">+</div>
+					<div class="zoom-button" id="zoom-out">&ndash;</div>
+				</div>
+				<div class="floor-title">
+					View all buildings &rarr;</br><b>Building //vm.building// - Floor //vm.floor//</b>
+				</div>
+				<div class="search-menu menu-container">
+					<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
+					<ul class="search-list">
+						<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'">
+							//booth.bthTitle//:
+							<span ng-repeat="exhibitor in booth.exhibitors">//exhibitor.exhibName////$last ? '' : ';'//
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.js"></script>
