@@ -12,7 +12,7 @@
 		<div>
 			<div class="map-container" id="map-canvas">
 				<svg id="floormaps">
-					<g>
+					<g id="zoomCanvas" transform="translate(0,0) scale(1)">
 					</g>
 				</svg>
 				<div class="zoom-menu menu-container">
@@ -24,13 +24,17 @@
 				</div>
 				<div class="search-menu menu-container">
 					<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
+					<div class="search-clear" ng-if="vm.exhibitorSearch" ng-click="vm.clearSearch()"></div>
 					<ul class="search-list">
-						<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'">
+						<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'" ng-click="vm.boothClick(booth.boothID)">
 							//booth.bthTitle//:
 							<span ng-repeat="exhibitor in booth.exhibitors">//exhibitor.exhibName////$last ? '' : ';'//
 							</span>
 						</li>
 					</ul>
+				</div>
+				<div ng-class="(vm.selectedBooth) ? 'selected-booth' : 'none'">
+					Booth: //vm.boothDict[vm.selectedBooth].exhibitors[0].exhibName//
 				</div>
 			</div>
 		</div>

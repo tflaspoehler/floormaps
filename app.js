@@ -114,14 +114,13 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
               console.log(booth);
 
               floormap.select("g").append("path")
+                  .attr("id", "path" + booth.boothID)
                   .attr("d", "M" + booth.vertices.map(function(vertex) {
                       return vertex.x + " " + vertex.y;
                   }).join(" L") + "Z")
                   .attr("class", "booth-path")
                   .attr("fill", color)
-                  .attr("ng-click", "vm.alert('" + booth.exhibitors.map(function(exhibitor) {
-                    return exhibitor.exhibName.replace("'", "&apos;");
-                  }).join(", ") + "')");
+                  .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
 
               booth.area = d3.polygonArea(booth.vertices.map(function(vertex){return [vertex.x, vertex.y];}));
               return booth;
@@ -153,16 +152,31 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
     vm.building = 3;
     vm.floor = 6;
     vm.booths = [];
+    vm.selectedBooth = null;
     boothService.getBooths(vm.building, vm.floor).then(function(booths) {
       var bts = {};
       booths.forEach(function(booth) {
         bts[booth.boothID] = booth;
       });
+      vm.boothDict = bts;
       vm.booths = booths;
       // compile d3 elements everything into angular
       $compile(floormap.node())($scope);
     });
-    vm.alert = function(exhibitors) {
-      alert(exhibitors);
+    vm.boothClick = function(boothID) {
+      var boothPath =  d3.select("#path" + boothID);
+      if (vm.selectedBooth) {
+        d3.select("#path" + vm.selectedBooth).attr("class", "booth-path");
+      }
+      vm.exhibitorSearch = vm.boothDict[boothID].exhibitors.map(function(exhibitor) {return exhibitor.exhibName}).join(',  ');
+      boothPath.attr("class", "booth-path booth-selected");
+      vm.selectedBooth = boothID;
+      console.log("bounding box", d3.select("#path" + boothID).node().getBBox());
+      console.log("g", d3.select("#zoomCanvas").attr('transform'));
+
+      // alert(vm.boothDict[boothID].exhibitors.map(function(exhibitor) {return exhibitor.exhibName}).join(',  '));
+    };
+    vm.clearSearch = function() {
+      vm.exhibitorSearch = "";
     };
 }]);

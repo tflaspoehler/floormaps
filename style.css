@@ -43,6 +43,9 @@ html, body {
 .booth-path:hover {
 	fill-opacity: 0.5;
 }
+.booth-selected {
+	fill-opacity: 1;
+}
 .menu-container {
 	position: absolute;
 	border-radius: 0.5em;
@@ -110,6 +113,22 @@ html, body {
 	width: 100% !important;
 	box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
     outline: none;
+}
+.search-clear {
+	position: absolute;
+	right: 0.25em;
+	top: 0.25em;
+	border-radius: 1em;
+	height: 0.5em;
+	width: 0.5em;
+	/* background-color: #aaa */;
+}
+.search-clear:after {
+	content: '\00D7';
+	font-size: 2em;
+	position: absolute;
+	top: -0.125em;
+	right: 0.2em;
 }
 /* #search-icon:after {
 	content: "\2315";
