@@ -23,8 +23,6 @@
 					View all buildings &rarr;</br><b>Building //vm.building// - Floor //vm.floor//</b>
 				</div>
 				<div class="search-menu menu-container">
-					<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
-					<div class="search-clear" ng-if="vm.exhibitorSearch" ng-click="vm.clearSearch()"></div>
 					<ul class="search-list">
 						<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'" ng-click="vm.boothClick(booth.boothID)">
 							//booth.bthTitle//:
@@ -32,9 +30,17 @@
 							</span>
 						</li>
 					</ul>
-				</div>
-				<div ng-class="(vm.selectedBooth) ? 'selected-booth' : 'none'">
-					Booth: //vm.boothDict[vm.selectedBooth].exhibitors[0].exhibName//
+					<div ng-class="(vm.selectedBooth) ? 'selected-booths' : 'none'" ng-if="vm.selectedBooth">
+						<div class="exhibitor-info" ng-repeat="exhibitor in vm.selectedExhibitors">
+							<div ng-if="exhibitor.logo"
+								 ng-style="{'background-image':'url(http:'+'//exhibitor.logo//'+')',
+											'border-radius':'0'}" class="exhibitor-logo"></div>
+							<div class="exhibitor-name">//exhibitor.showroomName//</div>
+							<div ng-if="exhibitor.description != exhibitor.showroomName" class="exhibitor-description" ng-bind-html="exhibitor.description"></div>
+						</div>
+					</div>
+					<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
+					<div class="search-clear" ng-if="vm.exhibitorSearch" ng-click="vm.clearSearch()"></div>
 				</div>
 			</div>
 		</div>

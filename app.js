@@ -144,15 +144,54 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
 }]);
 //----------------------------------//
 
+//------------------------------------------//
+//        get exhibitor information         //
+//------------------------------------------//
+mapApp.factory('getExhibitor', ['$http', '$q', function($http, $q) {
+
+    // ------------------------------------//
+    // this is setup the way it is so that //
+    //  there can be multiple instanaces   //
+    // ------------------------------------//
+    var exhibitor = function() {};
+    exhibitor.prototype.send = function(exhibID, parms={}) {
+      var url = "https://wem.americasmart.com/api/Exhibitor?exhibitorID=" + exhibID;
+      var deferred = $q.defer();
+      // return data 
+      $http.get(
+          url, {params: parms, cache: 'true'}
+      ).then(function (data) {
+          console.log("DATA", data);
+          deferred.resolve(data);
+      }, function (error) {
+          console.log("ERROR", error);
+          deferred.reject('There was an error', error);
+      });
+    };
+
+    // ------------------------------------//
+    //   unique instance being returned by //
+    //       getExhibitor.get(exhibID)     //
+    // ------------------------------------//
+    return {
+      get: function() {
+        return new exhibitor();
+      }
+    }
+    // ------------------------------------//
+    // ------------------------------------//
+}]);
+
 //-----------------------------------------------------------------------//
 //      controller to sends AJAX request and returns it to the view      //
 //-----------------------------------------------------------------------//
-mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest', 'boothService', function directoryController($scope, $sce, $compile, getRequest, boothService) {
+mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, getRequest, boothService, getExhibitor) {
     var vm = this;
     vm.building = 3;
     vm.floor = 6;
     vm.booths = [];
     vm.selectedBooth = null;
+    vm.selectedExhibitors = [];
     boothService.getBooths(vm.building, vm.floor).then(function(booths) {
       var bts = {};
       booths.forEach(function(booth) {
@@ -166,9 +205,27 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
     vm.boothClick = function(boothID) {
       var boothPath =  d3.select("#path" + boothID);
       if (vm.selectedBooth) {
+        vm.selectedExhibitors = [];
         d3.select("#path" + vm.selectedBooth).attr("class", "booth-path");
       }
       vm.exhibitorSearch = vm.boothDict[boothID].exhibitors.map(function(exhibitor) {return exhibitor.exhibName}).join(',  ');
+      
+      // ------------------------------------------------- //
+      // send request to get current exhibitor information //
+      // ------------------------------------------------- //
+      vm.boothDict[boothID].exhibitors.forEach(function(exhibitor) {
+        console.log("getting more information about exhibitor", exhibitor.exhibID);
+        getRequest.getData("https://wem.americasmart.com/api/Exhibitor?exhibitorID=" + exhibitor.exhibID).then(function(data) {
+          vm.boothDict[boothID].exhibitors.forEach(function(exhib) {
+            if (exhib.exhibName == data.showroomName) {
+              data.description = $sce.trustAsHtml('<p>' + data.description + '</p>');
+              vm.selectedExhibitors.push(data);
+            }
+          });
+        });
+      });
+      // ------------------------------------------------- //
+
       boothPath.attr("class", "booth-path booth-selected");
       vm.selectedBooth = boothID;
       console.log("bounding box", d3.select("#path" + boothID).node().getBBox());
@@ -178,5 +235,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
     };
     vm.clearSearch = function() {
       vm.exhibitorSearch = "";
+      vm.selectedBooth = null
+      vm.selectedExhibitors = [];
     };
 }]);
