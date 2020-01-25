@@ -180,20 +180,40 @@ html, body {
 	background-repeat: no-repeat;
 	background-position: center center;
 }
+.exhibitor-info {
+	border-bottom: 1px solid #eee;
+	padding-bottom: 0.5em;
+}
 .exhibitor-name {
 	text-align: center;
+	color: #000;
 }
 .exhibitor-description {
 	font-weight: normal;
 	font-size: 0.75em;
-	height: 6em;
+	max-height: 6em;
 	overflow-y: hidden;
+	color: #000;
 }
-.exhibitor-description:after {
-	content: ' ...';
+.exhibitor-info input + label .exhibitor-description:after {
+	content: '\25BC';
+	color: #777;
 	position: absolute;
-	bottom: 3px; right: 0;
-	background-color: #fff;
-	white-space: pre;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 1em;
+	text-align: center;
+	padding-top: 2.5em;
+	background-image: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,1));
 }
+.exhibitor-info input:checked + label .exhibitor-description {
+	height: auto !important;
+	max-height: none;
+}
+.exhibitor-info input:checked + label .exhibitor-description:after {
+	display: none;
+}
+.exhibitor-info input {
+	display: none;
 }

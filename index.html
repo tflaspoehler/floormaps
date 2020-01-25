@@ -31,12 +31,23 @@
 						</li>
 					</ul>
 					<div ng-class="(vm.selectedBooth) ? 'selected-booths' : 'none'" ng-if="vm.selectedBooth">
-						<div class="exhibitor-info" ng-repeat="exhibitor in vm.selectedExhibitors">
+						<div class="exhibitor-info" ng-repeat="exhibitor in vm.selectedExhibitors | orderBy:'-showroomName'">
 							<div ng-if="exhibitor.logo"
 								 ng-style="{'background-image':'url(http:'+'//exhibitor.logo//'+')',
 											'border-radius':'0'}" class="exhibitor-logo"></div>
 							<div class="exhibitor-name">//exhibitor.showroomName//</div>
-							<div ng-if="exhibitor.description != exhibitor.showroomName" class="exhibitor-description" ng-bind-html="exhibitor.description"></div>
+							<!-- <a href="">More Info<span class="next"></span></a>-->
+							<input type="checkbox" ng-if="(exhibitor.description) || (exhibitor.attribute.length > 0)" id="//exhibitor.showroomName//">
+							<label ng-if="(exhibitor.description) || (exhibitor.attribute.length > 0)" for="//exhibitor.showroomName//">
+								<div class="exhibitor-description">
+									<span ng-if="exhibitor.description" ng-bind-html="exhibitor.description"></span>
+									<span ng-if="exhibitor.attribute.length > 0">
+										<ul>
+											<li ng-repeat="attribute in exhibitor.attributes">//attrubte.attrName//</li>
+										</ul>
+									</span>
+								</div>
+							</label>
 						</div>
 					</div>
 					<div class="search-button" id="search-icon"><input class="search-input" placeholder="Search this floor..." type="text" ng-model="vm.exhibitorSearch"></div>
