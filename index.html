@@ -22,7 +22,7 @@
 				<div class="floor-title">
 					View all buildings &rarr;</br><b>Building //vm.building// - Floor //vm.floor//</b>
 				</div>
-				<input type="checkbox" id="search-checkbox" ng-model="vm.searchMenu" >
+				<input type="checkbox" id="search-checkbox" ng-model="vm.searchMenu">
 				<label for="search-checkbox" class="search-checkbox">
 				</label>
 				<div class="search-menu menu-container">
@@ -37,7 +37,7 @@
 						<div class="exhibitor-info" ng-repeat="exhibitor in vm.selectedExhibitors | orderBy:'-showroomName'">
 							<a ng-href="//exhibitor.href//" target="_blank">
 								<div ng-if="exhibitor.logo"
-								 	 ng-style="{'background-image':'url( http:'+'//exhibitor.logo//'+')',
+								 	 ng-style="{'background-image':'url( http:'+'//exhibitor.logo| escape//'+')',
 								 	 'border-radius':'0'}" class="exhibitor-logo"></div>
 								<div class="exhibitor-name next">//exhibitor.showroomName//</div>
 							</a>

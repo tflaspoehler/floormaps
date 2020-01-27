@@ -1,29 +1,4 @@
 
-// add sizing attributes to svg with floor map
-var floormap = d3.select("#floormaps")
-//    .attr("width", "100%")
-  //  .attr("height", "500px")
-    .attr("preserveAspectRatio", "xMinYMin")
-    .attr("viewBox", "0 0 300 300")
-    .classed("svg-content", true);
-floormap.selectAll("g > *").remove();
-// add zooming
-var zoom = d3.zoom()
-    .on('zoom', function() {
-        floormap.select("g");
-        floormap.select("g").attr('transform', d3.event.transform);
-    });
-floormap.call(d3.zoom().on("zoom", function() {
-    floormap.select("g").attr("transform", d3.event.transform);
-}));
-// zoom buttons
-d3.select('#zoom-in').on('click', function() {
-    zoom.scaleBy(floormap.transition().duration(200), 1.3);
-});
-
-d3.select('#zoom-out').on('click', function() {
-    zoom.scaleBy(floormap.transition().duration(200), 1.0 / 1.3);
-});
 
 
 mapApp = angular.module("mapApp", ['ngRoute']);
@@ -37,6 +12,14 @@ mapApp.config(['$interpolateProvider', function($interpolateProvider) {
     $interpolateProvider.endSymbol('//');
 }]);
 //-------------------------------------------------------------------//
+
+//--------------------------------------------//
+// filter to encode urls for links and images //
+//--------------------------------------------//
+mapApp.filter('escape', function() {
+  return window.encodeURI;
+});
+//----------------------------------//
 
 //----------------------------------//
 //   service to get http requests   //
@@ -84,6 +67,35 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
     // return promise of getting booths and set our own stuff //
     // ------------------------------------------------------ //
     this.getBooths = function(building, floor, parms={}) {
+
+
+      // ----------------------------- //
+      // +++      INIT D3 SVG      +++ //
+      // ----------------------------- //
+      var floormap = d3.select("#floormaps")
+          .attr("preserveAspectRatio", "xMinYMin")
+          .attr("viewBox", "0 0 300 300")
+          .classed("svg-content", true);
+      floormap.selectAll("g > *").remove();
+      // add zooming
+      var zoom = d3.zoom()
+          .on('zoom', function() {
+              floormap.select("g");
+              floormap.select("g").attr('transform', d3.event.transform);
+          });
+      floormap.call(d3.zoom().on("zoom", function() {
+          floormap.select("g").attr("transform", d3.event.transform);
+      }));
+      // zoom buttons
+      d3.select('#zoom-in').on('click', function() {
+          zoom.scaleBy(floormap.transition().duration(200), 1.3);
+      });
+      d3.select('#zoom-out').on('click', function() {
+          zoom.scaleBy(floormap.transition().duration(200), 1.0 / 1.3);
+      });
+      // ----------------------------- //
+
+
       var url = floorplanAPI + "?building=" + building + "&floorNum=" + floor;
       var deferred = $q.defer();
       _building = building;
@@ -94,7 +106,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           url, {params: parms, cache: 'true'}
       ).then(function (data) {
           // filter booths and add svgs and background image
-          var buildingColor = (building == 1) ? "rgb(0, 0, 255)" : (building == 2) ? "rgb(255, 0, 0)" :  "rgb(0, 255, 0)";
+          var buildingColor = (building == 1) ? "#005EC6" : (building == 2) ? "#BE0101" :  "#107F50";
           var results = data.data[0]
           console.log(results, results.mapGraphic.url);
 
@@ -110,7 +122,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
 
           // add booths
           _booths = results.booths.map(function(booth) {
-              var color = (booth.exhibitors.length > 0) ? buildingColor : "rgb(0, 0, 0)";
+              var color = (booth.exhibitors.length > 0) ? buildingColor : "#eee";
               console.log(booth);
 
               floormap.select("g").append("path")
@@ -187,8 +199,9 @@ mapApp.factory('getExhibitor', ['$http', '$q', function($http, $q) {
 //-----------------------------------------------------------------------//
 mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, getRequest, boothService, getExhibitor) {
     var vm = this;
-    vm.building = 3;
-    vm.floor = 4;
+    var floormap = d3.select("#floormaps");
+    vm.building = 1;
+    vm.floor = 15;
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
@@ -226,7 +239,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
             if (exhib.exhibName == data.showroomName) {
               console.log("selectedExhibitor", data);
               data.description = $sce.trustAsHtml(data.description);
-              data.logo = data.logo.replace(' ', '%20');
+              data.logo = data.logo;
               data.href = 'https://www.americasmart.com/browse/#/exhibitor/' + data.exhibitorID;
               vm.selectedExhibitors.push(data);
             }

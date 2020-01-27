@@ -37,14 +37,23 @@ html, body {
 }
 .booth-path {
 	stroke: #000;
-	fill-opacity: 0.2;
+	fill-opacity: 0.75;
 	cursor: pointer;
 }
 .booth-path:hover {
-	fill-opacity: 0.5;
+	fill-opacity: 0.9;
 }
 .booth-selected {
 	fill-opacity: 1;
+}
+.booth-building-1 {
+	fill: color:#005EC6
+}
+.booth-building-2 {
+	fill: color:#BE0101
+}
+.booth-building-3 {
+	fill: color:#107F50
 }
 .menu-container {
 	position: absolute;
@@ -188,8 +197,13 @@ html, body {
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     outline: none;
     cursor: pointer;
-	transition: all 0.5s ease-in-out;
+	transition: left 0.5s ease-in-out;
 	left: 0;
+}
+#search-checkbox + .search-checkbox:hover {
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+	color: #000;
+
 }
 #search-checkbox:checked + .search-checkbox {
 	left: 300px;
@@ -269,3 +283,4 @@ html, body {
 .exhibitor-info input {
 	display: none;
 }
+
