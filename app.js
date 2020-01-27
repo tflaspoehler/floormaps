@@ -156,15 +156,31 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
                   centerOfMass.y += (Math.pow(booth.vertices[i+1].y, 2) - Math.pow(booth.vertices[i].y, 2))
                                            * (booth.vertices[i+1].x              + booth.vertices[i].x);
               }
+              centerOfMass.x *= 0.5 / mass.x;
+              centerOfMass.y *= 0.5 / mass.y;
 
               // add placemark
               floormap.select("g").append("circle")
-                  .attr("cx", 0.5 * centerOfMass.x / mass.x)
-                  .attr("cy", 0.5 * centerOfMass.y / mass.y)
+                  .attr("cx", centerOfMass.x)
+                  .attr("cy", centerOfMass.y)
                   .attr("r", "1")
                   .attr("stroke", "black")
                   .attr("fill", "red")
-                  .attr("fill-opactiy", "0.2");
+                  .attr("fill-opactiy", "0.2")
+                  .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
+              if (booth.exhibitors.length > 0) {
+                floormap.select("g").append("text")
+                    .attr("x", centerOfMass.x)
+                    .attr("y", centerOfMass.y + 5.0)
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "hanging")
+                    .attr("ng-click", "vm.boothClick('" + booth.boothID + "')")
+                    .text(booth.exhibitors.map(function(exhibitor) {
+                      return exhibitor.exhibName;
+                    }).join(", "));
+              }
+
+
               console.log("bounding box", d3.select("#path" + booth.boothID).node().getBBox());
               console.log("g", d3.select("#zoomCanvas").attr('transform'));
 
@@ -234,8 +250,8 @@ mapApp.factory('getExhibitor', ['$http', '$q', function($http, $q) {
 mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, getRequest, boothService, getExhibitor) {
     var vm = this;
     var floormap = d3.select("#floormaps");
-    vm.building = 1;
-    vm.floor = 15;
+    vm.building = 2;
+    vm.floor = 6;
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
