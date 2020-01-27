@@ -227,6 +227,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
               console.log("selectedExhibitor", data);
               data.description = $sce.trustAsHtml(data.description);
               data.logo = data.logo.replace(' ', '%20');
+              data.href = 'https://www.americasmart.com/browse/#/exhibitor/' + data.exhibitorID;
               vm.selectedExhibitors.push(data);
             }
           });

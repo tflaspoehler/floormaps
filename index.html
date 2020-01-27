@@ -35,7 +35,7 @@
 					</ul>
 					<div ng-class="(vm.selectedBooth) ? 'selected-booths' : 'none'" ng-if="vm.selectedBooth">
 						<div class="exhibitor-info" ng-repeat="exhibitor in vm.selectedExhibitors | orderBy:'-showroomName'">
-							<a ng-href="" target="_blank">
+							<a ng-href="//exhibitor.href//" target="_blank">
 								<div ng-if="exhibitor.logo"
 								 	 ng-style="{'background-image':'url( http:'+'//exhibitor.logo//'+')',
 								 	 'border-radius':'0'}" class="exhibitor-logo"></div>
