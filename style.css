@@ -133,6 +133,7 @@ html, body {
 }
 .search-input {
 	border-radius: 0 !important;
+	padding-right: 1.75em !important;
 }
 #search-icon {
 	width: 100%;
@@ -161,7 +162,7 @@ html, body {
 	content: '\00D7';
 	font-size: 2em;
 	position: absolute;
-	top: -0.125em;
+	top: -0.1875em;
 	right: 0.2em;
 }
 /* #search-icon:after {

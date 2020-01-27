@@ -98,7 +98,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           // show if it's not too big
           markcanvas.selectAll("text").each(function(d) {
             var label = d3.select(this);
-            if ((transform.k) / (label.attr("ratio")) >= (1.0 - (0.25*maxarea/label.attr("area")))) {
+            if ((transform.k) / (label.attr("ratio")) >= 0.8*(1.0 - (0.25*maxarea/label.attr("area")))) {
               label.attr("class", "booth-label booth-label-on");
             } else {
               label.attr("class", "booth-label booth-label-off");
@@ -190,7 +190,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
                   .attr("r", "1")
                   .attr("stroke", "black")
                   .attr("fill", "red")
-                  .attr("fill-opactiy", "0.2")
+                  .attr("fill-opactiy", "0")
                   .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
               if (booth.exhibitors.length > 0) {
                 var label = markcanvas.append("text")
@@ -278,7 +278,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
     var vm = this;
     var floormap = d3.select("#floormaps");
     vm.building = 2;
-    vm.floor = 6;
+    vm.floor = 9;
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
