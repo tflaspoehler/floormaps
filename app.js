@@ -192,6 +192,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
+    vm.searchMenu = true;
     boothService.getBooths(vm.building, vm.floor).then(function(booths) {
       var bts = {};
       booths.forEach(function(booth) {
@@ -204,6 +205,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
     });
     vm.boothClick = function(boothID) {
       var boothPath =  d3.select("#path" + boothID);
+      vm.searchMenu = true;
       if (vm.selectedBooth) {
         vm.selectedExhibitors = [];
         d3.select("#path" + vm.selectedBooth).attr("class", "booth-path");
