@@ -79,6 +79,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
 
       var mapcanvas = d3.select("#zoomCanvas")
       var markcanvas = d3.select("#placemarkCanvas")
+      var maxarea = 0.0;
       floormap.selectAll("g > *").remove();
       // add zooming
       var zoom = d3.zoom()
@@ -88,12 +89,21 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
               markcanvas.attr('transform', d3.event.transform);
           });
       floormap.call(d3.zoom().on("zoom", function() {
-          console.log('transform', d3.event.transform);
           var transform = d3.event.transform
+          var labels = markcanvas.selectAll("text");
           mapcanvas.attr("transform", d3.event.transform);
           markcanvas.attr("transform", d3.event.transform);
-          markcanvas.selectAll("text").attr('font-size', 6.0 / transform.k);
-          markcanvas.selectAll("text").attr('stroke-width', 0.25 / transform.k);
+          labels.attr('font-size', 6.0 / transform.k);
+          labels.attr('stroke-width', 0.4 / transform.k);
+          // show if it's not too big
+          markcanvas.selectAll("text").each(function(d) {
+            var label = d3.select(this);
+            if ((transform.k) / (label.attr("ratio")) >= (1.0 - (0.25*maxarea/label.attr("area")))) {
+              label.attr("class", "booth-label booth-label-on");
+            } else {
+              label.attr("class", "booth-label booth-label-off");
+            }
+          })
       }));
       // zoom buttons
       d3.select('#zoom-in').on('click', function() {
@@ -133,6 +143,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
               var color = (booth.exhibitors.length > 0) ? buildingColor : "#eee";
               var centerOfMass = {x: 0, y: 0};
               var mass = {x: 0, y: 0};
+              var labels = null;
               console.log(booth);
 
               var next = mapcanvas.append("path")
@@ -143,7 +154,11 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
                   .attr("class", "booth-path")
                   .attr("fill", color)
                   .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
-
+              var width = next.node().getBBox().width;
+              booth.area = d3.polygonArea(booth.vertices.map(function(vertex){return [vertex.x, vertex.y];}))
+              if (booth.area > maxarea) {
+                maxarea = 1.0 * booth.area;
+              };
 
               // attempt to get center of momentum so centroid placemarks are not out of the area
               mass.x = (booth.vertices[0].x - booth.vertices[booth.vertices.length-1].x)
@@ -178,21 +193,25 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
                   .attr("fill-opactiy", "0.2")
                   .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
               if (booth.exhibitors.length > 0) {
-                markcanvas.append("text")
+                var label = markcanvas.append("text")
                     .attr("x", centerOfMass.x)
                     .attr("y", centerOfMass.y + 5.0)
-                    .attr("class", "booth-label")
+                    .attr('font-size', 6.0)
+                    .attr('stroke-width', 0.4)
                     .attr("ng-click", "vm.boothClick('" + booth.boothID + "')")
+                    .attr("data-exhibid", booth.boothID)
                     .text(booth.exhibitors.map(function(exhibitor) {
                       return exhibitor.exhibName;
                     }).join(", "));
+                var ratio = parseFloat(label.node().getBBox().width) / parseFloat(width);
+                label.attr("ratio", ratio);
+                label.attr("area", booth.area);
+                if (ratio >= 1.0) {
+                  label.attr("class", "booth-label booth-label-on");
+                } else {
+                  label.attr("class", "booth-label booth-label-off");
+                }
               }
-
-
-              console.log("bounding box", d3.select("#path" + booth.boothID).node().getBBox());
-              console.log("g", d3.select("#zoomCanvas").attr('transform'));
-
-              booth.area = d3.polygonArea(booth.vertices.map(function(vertex){return [vertex.x, vertex.y];}));
               return booth;
           }).filter(function(booth) {
               return (booth.exhibitors.length > 0) ? 1 : 0;

@@ -62,6 +62,14 @@ html, body {
 	stroke: #fff;
 	stroke-linecap: butt;
 	stroke-linejoin: miter;
+	font-weight: bold;
+	/*display: none;*/
+}
+.booth-label-off {
+	display: none !important;
+}
+.booth-label-on {
+	display: block !important;
 }
 .menu-container {
 	position: absolute;
