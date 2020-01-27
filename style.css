@@ -17,6 +17,7 @@ html, body {
 	border-top: 1px solid #333;
 	max-height: 100%;
 	box-sizing: border-box;
+	height: 100%;
 }
 #floormaps {
 	vertical-align: middle;
@@ -26,7 +27,7 @@ html, body {
   /* set some maximum size (width and height need to match
    * aspect ratio, 1:1 in this case */
   max-width: 100%;
-  max-height: 600px;
+  max-height: 100%;
 }
 .map-container * {
 	user-select: none;
