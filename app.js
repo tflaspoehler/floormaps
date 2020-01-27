@@ -108,7 +108,6 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           // filter booths and add svgs and background image
           var buildingColor = (building == 1) ? "#005EC6" : (building == 2) ? "#BE0101" :  "#107F50";
           var results = data.data[0]
-          console.log(results, results.mapGraphic.url);
 
           // add background image
           var scalex = parseFloat(results.mapGraphic.width) / parseFloat(results.mapWidth);
@@ -123,9 +122,11 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           // add booths
           _booths = results.booths.map(function(booth) {
               var color = (booth.exhibitors.length > 0) ? buildingColor : "#eee";
+              var centerOfMass = {x: 0, y: 0};
+              var mass = {x: 0, y: 0};
               console.log(booth);
 
-              floormap.select("g").append("path")
+              var next = floormap.select("g").append("path")
                   .attr("id", "path" + booth.boothID)
                   .attr("d", "M" + booth.vertices.map(function(vertex) {
                       return vertex.x + " " + vertex.y;
@@ -133,6 +134,39 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
                   .attr("class", "booth-path")
                   .attr("fill", color)
                   .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
+
+
+              // attempt to get center of momentum so centroid placemarks are not out of the area
+              mass.x = (booth.vertices[0].x - booth.vertices[booth.vertices.length-1].x)
+                     * (booth.vertices[0].y + booth.vertices[booth.vertices.length-1].y);
+              mass.y = (booth.vertices[0].y - booth.vertices[booth.vertices.length-1].y)
+                     * (booth.vertices[0].x + booth.vertices[booth.vertices.length-1].x);
+              centerOfMass.x = (Math.pow(booth.vertices[0].x, 2) - Math.pow(booth.vertices[booth.vertices.length-1].x, 2))
+                                      * (booth.vertices[0].y              + booth.vertices[booth.vertices.length-1].y);
+              centerOfMass.y = (Math.pow(booth.vertices[0].y, 2) - Math.pow(booth.vertices[booth.vertices.length-1].y, 2))
+                                      * (booth.vertices[0].x              + booth.vertices[booth.vertices.length-1].x);
+              // loop through all but last which is above in initial conditions
+              for (i = 0; i < booth.vertices.length-1; i++) {
+                  mass.x += (booth.vertices[i+1].x - booth.vertices[i].x)
+                          * (booth.vertices[i+1].y + booth.vertices[i].y);
+                  mass.y += (booth.vertices[i+1].y - booth.vertices[i].y)
+                          * (booth.vertices[i+1].x + booth.vertices[i].x);
+                  centerOfMass.x += (Math.pow(booth.vertices[i+1].x, 2) - Math.pow(booth.vertices[i].x, 2))
+                                           * (booth.vertices[i+1].y              + booth.vertices[i].y);
+                  centerOfMass.y += (Math.pow(booth.vertices[i+1].y, 2) - Math.pow(booth.vertices[i].y, 2))
+                                           * (booth.vertices[i+1].x              + booth.vertices[i].x);
+              }
+
+              // add placemark
+              floormap.select("g").append("circle")
+                  .attr("cx", 0.5 * centerOfMass.x / mass.x)
+                  .attr("cy", 0.5 * centerOfMass.y / mass.y)
+                  .attr("r", "1")
+                  .attr("stroke", "black")
+                  .attr("fill", "red")
+                  .attr("fill-opactiy", "0.2");
+              console.log("bounding box", d3.select("#path" + booth.boothID).node().getBBox());
+              console.log("g", d3.select("#zoomCanvas").attr('transform'));
 
               booth.area = d3.polygonArea(booth.vertices.map(function(vertex){return [vertex.x, vertex.y];}));
               return booth;
