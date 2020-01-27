@@ -94,7 +94,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           mapcanvas.attr("transform", d3.event.transform);
           markcanvas.attr("transform", d3.event.transform);
           labels.attr('font-size', 6.0 / transform.k);
-          labels.attr('stroke-width', 0.4 / transform.k);
+          labels.attr('stroke-width', 0.75 / transform.k);
           // show if it's not too big
           markcanvas.selectAll("text").each(function(d) {
             var label = d3.select(this);

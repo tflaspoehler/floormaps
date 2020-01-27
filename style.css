@@ -62,6 +62,7 @@ html, body {
 	stroke: #fff;
 	stroke-linecap: butt;
 	stroke-linejoin: miter;
+	stroke-opacity: 0.75;
 	font-weight: bold;
 	/*display: none;*/
 }
