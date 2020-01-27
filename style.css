@@ -55,6 +55,14 @@ html, body {
 .booth-building-3 {
 	fill: color:#107F50
 }
+.booth-label {
+	text-anchor: middle;
+	alignment-baseline: hanging;
+	paint-order: stroke;
+	stroke: #fff;
+	stroke-linecap: butt;
+	stroke-linejoin: miter;
+}
 .menu-container {
 	position: absolute;
 	border-radius: 0.5em;

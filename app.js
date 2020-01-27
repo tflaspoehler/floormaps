@@ -76,15 +76,24 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           .attr("preserveAspectRatio", "xMinYMin")
           .attr("viewBox", "0 0 300 300")
           .classed("svg-content", true);
+
+      var mapcanvas = d3.select("#zoomCanvas")
+      var markcanvas = d3.select("#placemarkCanvas")
       floormap.selectAll("g > *").remove();
       // add zooming
       var zoom = d3.zoom()
           .on('zoom', function() {
-              floormap.select("g");
-              floormap.select("g").attr('transform', d3.event.transform);
+              console.log('transform', d3.event.transform);
+              mapcanvas.attr('transform', d3.event.transform);
+              markcanvas.attr('transform', d3.event.transform);
           });
       floormap.call(d3.zoom().on("zoom", function() {
-          floormap.select("g").attr("transform", d3.event.transform);
+          console.log('transform', d3.event.transform);
+          var transform = d3.event.transform
+          mapcanvas.attr("transform", d3.event.transform);
+          markcanvas.attr("transform", d3.event.transform);
+          markcanvas.selectAll("text").attr('font-size', 6.0 / transform.k);
+          markcanvas.selectAll("text").attr('stroke-width', 0.25 / transform.k);
       }));
       // zoom buttons
       d3.select('#zoom-in').on('click', function() {
@@ -112,7 +121,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           // add background image
           var scalex = parseFloat(results.mapGraphic.width) / parseFloat(results.mapWidth);
           var scaley = parseFloat(results.mapGraphic.height) / parseFloat(results.mapHeight);
-          floormap.select("g").append("svg:image")
+          mapcanvas.append("svg:image")
               .attr("xlink:href", "http:" + results.mapGraphic.url)
               .attr("width", parseFloat(results.mapGraphic.width) / parseFloat(results.transforms[0].d))
               .attr("height", parseFloat(results.mapGraphic.height) / parseFloat(results.transforms[0].a))
@@ -126,7 +135,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
               var mass = {x: 0, y: 0};
               console.log(booth);
 
-              var next = floormap.select("g").append("path")
+              var next = mapcanvas.append("path")
                   .attr("id", "path" + booth.boothID)
                   .attr("d", "M" + booth.vertices.map(function(vertex) {
                       return vertex.x + " " + vertex.y;
@@ -160,7 +169,7 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
               centerOfMass.y *= 0.5 / mass.y;
 
               // add placemark
-              floormap.select("g").append("circle")
+              markcanvas.append("circle")
                   .attr("cx", centerOfMass.x)
                   .attr("cy", centerOfMass.y)
                   .attr("r", "1")
@@ -169,11 +178,10 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
                   .attr("fill-opactiy", "0.2")
                   .attr("ng-click", "vm.boothClick('" + booth.boothID + "')");
               if (booth.exhibitors.length > 0) {
-                floormap.select("g").append("text")
+                markcanvas.append("text")
                     .attr("x", centerOfMass.x)
                     .attr("y", centerOfMass.y + 5.0)
-                    .attr("text-anchor", "middle")
-                    .attr("alignment-baseline", "hanging")
+                    .attr("class", "booth-label")
                     .attr("ng-click", "vm.boothClick('" + booth.boothID + "')")
                     .text(booth.exhibitors.map(function(exhibitor) {
                       return exhibitor.exhibName;
