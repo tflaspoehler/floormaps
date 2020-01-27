@@ -68,17 +68,18 @@ html, body {
 .floor-title {
 	position: absolute;
 	top: 0;
-	left: 0;
-	width: 300px;
+	right: 0;
+	width: 200px;
 	height: 3.5em;
 	text-align: center;
 	padding: 0.25em;
-	background-color: #333;
-	border: 1px solid #333;
-	color: #fff;
+	background-color: #fff;
+	border: 1px solid #eee;
+	color: #333;
 	box-sizing: border-box;
 	cursor: pointer;
 	line-height: 1.5;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 .zoom-menu > div:first-child {
 	border-bottom: 1px solid #999;
@@ -87,9 +88,15 @@ html, body {
 	bottom: 1em;
 	right: 1em;
 }
+.search-button {
+	background-color: #fff;
+	padding: 1em !important;
+	box-sizing: border-box;
+	border-bottom: 1px solid #eee;
+}
 .search-menu {
 	padding: 0em;
-	top: 3.5em;
+	top: 0em;
 	bottom: 0em;
 	left: 0em;
 	width: 300px;
@@ -98,9 +105,11 @@ html, body {
 	border-radius: 0;
 	box-sizing: border-box;
 }
+.search-input {
+	border-radius: 0 !important;
+}
 #search-icon {
 	width: 100%;
-	padding: 0;
 	height: auto;
 }
 #search-icon input {
@@ -110,13 +119,13 @@ html, body {
 	border-width: 0 0 1px 0;
 	box-sizing: border-box;
 	width: 100% !important;
-	box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     outline: none;
 }
 .search-clear {
 	position: absolute;
-	right: 0.25em;
-	top: 0.25em;
+	right: 1.25em;
+	top: 1.25em;
 	border-radius: 1em;
 	height: 0.5em;
 	width: 0.5em;
@@ -137,33 +146,70 @@ html, body {
 } */
 .search-list {
 	position: absolute;
-	top: 2.25em;
+	top: 4.25em;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	overflow-y: scroll;
 }
-.map-container ul {
+.search-list {
 	list-style: none;
 	margin-block-start: 0.5em;
     margin-block-end: 0;
     margin-inline-start: 0;
     margin-inline-end: 0;
     padding-inline-start: 0;
+	margin: 0 !important;
 }
-.map-container li {
+.search-list li {
 	width: 100%;
 	box-sizing: border-box;
 	padding: 0.5em;
 	border-bottom: 1px solid #eee;
 	cursor: pointer;
 } 
-.map-container li:hover {
+.search-list li:hover {
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+#search-checkbox {
+	display: none;
+}
+#search-checkbox + .search-checkbox {
+	position: absolute;
+	width: 2em;
+	height: 3.25em;
+	top: 1.333em;
+	background-color: #fff;
+	display: inline-block;
+	font-size: 0.75em;
+	padding: 1em 0.5em;
+	border-width: 0 0 1px 0;
+	box-sizing: border-box;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    outline: none;
+    cursor: pointer;
+	transition: all 0.5s ease-in-out;
+	left: 0;
+}
+#search-checkbox:checked + .search-checkbox {
+	left: 300px;
+}
+#search-checkbox + .search-checkbox:after {
+	content: '\25B6';
+}
+#search-checkbox:checked + .search-checkbox:after {
+	content: '\25C0';
+}
+#search-checkbox + .search-checkbox + div {
+	transition: all 0.5s ease-in-out;
+	left: -300px;
+}
+#search-checkbox:checked + .search-checkbox + div {
+	left: 0;
 }
 .selected-booths {
 	position: absolute;
-	top: 1.75em;
+	top: 2.75em;
 	bottom: 0;
 	left: 0;
 	width: 300px !important;
@@ -187,6 +233,7 @@ html, body {
 .exhibitor-name {
 	text-align: center;
 	color: #000;
+	margin-top: 0.5em;
 }
 .exhibitor-description {
 	font-weight: normal;
@@ -194,6 +241,11 @@ html, body {
 	max-height: 6em;
 	overflow-y: hidden;
 	color: #000;
+}
+.exhibitor-info .list.float {
+	overflow: initial;
+	padding: 0.5em 0;
+
 }
 .exhibitor-info input + label .exhibitor-description:after {
 	content: '\25BC';

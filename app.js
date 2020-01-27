@@ -188,7 +188,7 @@ mapApp.factory('getExhibitor', ['$http', '$q', function($http, $q) {
 mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, getRequest, boothService, getExhibitor) {
     var vm = this;
     vm.building = 3;
-    vm.floor = 4;
+    vm.floor = 2;
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
@@ -208,6 +208,10 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
         vm.selectedExhibitors = [];
         d3.select("#path" + vm.selectedBooth).attr("class", "booth-path");
       }
+
+      boothPath.attr("class", "booth-path booth-selected");
+      vm.selectedBooth = boothID;
+
       vm.exhibitorSearch = vm.boothDict[boothID].exhibitors.map(function(exhibitor) {return exhibitor.exhibName}).join(',  ');
       
       // ------------------------------------------------- //
@@ -218,6 +222,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
         getRequest.getData("https://wem.americasmart.com/api/Exhibitor?exhibitorID=" + exhibitor.exhibID).then(function(data) {
           vm.boothDict[boothID].exhibitors.forEach(function(exhib) {
             if (exhib.exhibName == data.showroomName) {
+              console.log("selectedExhibitor", data);
               data.description = $sce.trustAsHtml(data.description);
               data.logo = data.logo.replace(' ', '%20');
               vm.selectedExhibitors.push(data);
@@ -227,8 +232,6 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
       });
       // ------------------------------------------------- //
 
-      boothPath.attr("class", "booth-path booth-selected");
-      vm.selectedBooth = boothID;
       console.log("bounding box", d3.select("#path" + boothID).node().getBBox());
       console.log("g", d3.select("#zoomCanvas").attr('transform'));
 

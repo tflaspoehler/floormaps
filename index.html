@@ -22,6 +22,9 @@
 				<div class="floor-title">
 					View all buildings &rarr;</br><b>Building //vm.building// - Floor //vm.floor//</b>
 				</div>
+				<input type="checkbox" id="search-checkbox" checked>
+				<label for="search-checkbox" class="search-checkbox">
+				</label>
 				<div class="search-menu menu-container">
 					<ul class="search-list">
 						<li ng-repeat="booth in vm.booths | filter: vm.exhibitorSearch | orderBy:'-exhibitor[0].exhibName'" ng-click="vm.boothClick(booth.boothID)">
@@ -32,14 +35,20 @@
 					</ul>
 					<div ng-class="(vm.selectedBooth) ? 'selected-booths' : 'none'" ng-if="vm.selectedBooth">
 						<div class="exhibitor-info" ng-repeat="exhibitor in vm.selectedExhibitors | orderBy:'-showroomName'">
-							<div ng-if="exhibitor.logo"
-								 ng-style="{'background-image':'url(http:'+'//exhibitor.logo//'+')',
-											'border-radius':'0'}" class="exhibitor-logo"></div>
-							<div class="exhibitor-name">//exhibitor.showroomName//</div>
+							<a ng-href="" target="_blank">
+								<div ng-if="exhibitor.logo"
+								 	 ng-style="{'background-image':'url( http:'+'//exhibitor.logo//'+')',
+								 	 'border-radius':'0'}" class="exhibitor-logo"></div>
+								<div class="exhibitor-name next">//exhibitor.showroomName//</div>
+							</a>
 							<!-- <a href="">More Info<span class="next"></span></a>-->
-							<input type="checkbox" ng-if="(exhibitor.description) || (exhibitor.attribute.length > 0)" id="//exhibitor.showroomName//">
-							<label ng-if="(exhibitor.description) || (exhibitor.attribute.length > 0)" for="//exhibitor.showroomName//">
+							<input type="checkbox" ng-if="(exhibitor.description) || (exhibitor.attribute.length > 0) || 
+							exhibitor.boothRequests.length > 0" id="//exhibitor.showroomName//" checked>
+							<label ng-if="(exhibitor.description) || (exhibitor.attribute.length > 0) || exhibitor.boothRequests.length > 0" for="//exhibitor.showroomName//">
 								<div class="exhibitor-description">
+									<ul ng-if="exhibitor.boothRequests.length > 0" ng-repeat="booth in exhibitor.boothRequests" class="list float">
+										<li ng-if="booth.booths.length > 0" ng-repeat="space in booth.booths">B//space.building// <span ng-class="'amc-icon icon-building-' + space.building"></span> //space.floor// &ndash; //space.boothTitle//</li>
+									</ul>
 									<span ng-if="exhibitor.description" ng-bind-html="exhibitor.description"></span>
 									<span ng-if="exhibitor.attribute.length > 0">
 										<ul>
