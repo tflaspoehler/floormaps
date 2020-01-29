@@ -51,6 +51,8 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
     var _building = null;
     var _floor = null;
     var _booths = [];
+    var _fontSize = 10;
+    var _outline = 1.25;
 
     // return booths if anything has changed if not get booths
     this.booths = function(building, floor) {
@@ -68,53 +70,6 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
     // ------------------------------------------------------ //
     this.getBooths = function(building, floor, parms={}) {
 
-
-      // ----------------------------- //
-      // +++      INIT D3 SVG      +++ //
-      // ----------------------------- //
-      var floormap = d3.select("#floormaps")
-          .attr("preserveAspectRatio", "xMinYMin")
-          .attr("viewBox", "0 0 300 300")
-          .classed("svg-content", true);
-
-      var mapcanvas = d3.select("#zoomCanvas")
-      var markcanvas = d3.select("#placemarkCanvas")
-      var maxarea = 0.0;
-      floormap.selectAll("g > *").remove();
-      // add zooming
-      var zoom = d3.zoom()
-          .on('zoom', function() {
-              console.log('transform', d3.event.transform);
-              mapcanvas.attr('transform', d3.event.transform);
-              markcanvas.attr('transform', d3.event.transform);
-          });
-      floormap.call(d3.zoom().on("zoom", function() {
-          var transform = d3.event.transform
-          var labels = markcanvas.selectAll("text");
-          mapcanvas.attr("transform", d3.event.transform);
-          markcanvas.attr("transform", d3.event.transform);
-          labels.attr('font-size', 6.0 / transform.k);
-          labels.attr('stroke-width', 0.75 / transform.k);
-          // show if it's not too big
-          markcanvas.selectAll("text").each(function(d) {
-            var label = d3.select(this);
-            if ((transform.k) / (label.attr("ratio")) >= 0.8*(1.0 - (0.25*maxarea/label.attr("area")))) {
-              label.attr("class", "booth-label booth-label-on");
-            } else {
-              label.attr("class", "booth-label booth-label-off");
-            }
-          })
-      }));
-      // zoom buttons
-      d3.select('#zoom-in').on('click', function() {
-          zoom.scaleBy(floormap.transition().duration(200), 1.3);
-      });
-      d3.select('#zoom-out').on('click', function() {
-          zoom.scaleBy(floormap.transition().duration(200), 1.0 / 1.3);
-      });
-      // ----------------------------- //
-
-
       var url = floorplanAPI + "?building=" + building + "&floorNum=" + floor;
       var deferred = $q.defer();
       _building = building;
@@ -124,13 +79,79 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
       $http.get(
           url, {params: parms, cache: 'true'}
       ).then(function (data) {
+
+          var floormap = d3.select("#floormaps");
+          var mapcanvas = d3.select("#zoomCanvas");
+          var markcanvas = d3.select("#placemarkCanvas");
+          var container = d3.select("#map-canvas");
+          var containerBox = container.node().getBoundingClientRect();
+
           // filter booths and add svgs and background image
           var buildingColor = (building == 1) ? "#005EC6" : (building == 2) ? "#BE0101" :  "#107F50";
           var results = data.data[0]
 
+          // parameters to fit in viewport
+          var transcale = 0.8 * ((containerBox.width / results.mapGraphic.width) > (containerBox.height / results.mapGraphic.height)) ? (containerBox.height / results.mapGraphic.height) : (containerBox.width / results.mapGraphic.width);
+          _fontSize = _fontSize / transcale
+          _outline = _outline / transcale
+
+          var transx = (containerBox.width  - (transcale * results.mapGraphic.width / parseFloat(results.transforms[0].d)))  / 2.0;
+          var transy = (containerBox.height - (transcale * results.mapGraphic.height / parseFloat(results.transforms[0].a))) / 2.0;
+
           // add background image
           var scalex = parseFloat(results.mapGraphic.width) / parseFloat(results.mapWidth);
           var scaley = parseFloat(results.mapGraphic.height) / parseFloat(results.mapHeight);
+
+          // ----------------------------- //
+          // +++      INIT D3 SVG      +++ //
+          // ----------------------------- //
+
+          var maxarea = 0.0;
+          console.log(containerBox);
+          // floormap.attr("preserveAspectRatio", "xMinYMin");
+          floormap.attr("viewBox", "0 0 " + containerBox.width + " "  + containerBox.height);
+          floormap.classed("svg-content", true);
+          floormap.selectAll("g > *").remove();
+
+          // add zooming
+          var zoom = d3.zoom()
+              .on('zoom', function() {
+                  console.log('transform', d3.event.transform);
+                  mapcanvas.attr('transform', d3.event.transform);
+                  markcanvas.attr('transform', d3.event.transform);
+              });
+          // mapcanvas.call(zoom.transform, d3.zoomIdentity.translate(transx, transy).scale(transcale));
+          // mapcanvas = d3.select("#zoomCanvas")
+          //   .call(zoom)
+          //   .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(transcale));
+          // mapcanvas.attr("transform", "transform(0, 0) scale(" + transcale + ")");
+          // mapcanvas.call(zoom).call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(transcale));
+          floormap.call(d3.zoom().on("zoom", function() {
+              var transform = d3.event.transform
+              var labels = markcanvas.selectAll("text");
+              mapcanvas.attr("transform", d3.event.transform);
+              markcanvas.attr("transform", d3.event.transform);
+              labels.attr('font-size', _fontSize / transform.k);
+              labels.attr('stroke-width', _outline / transform.k);
+              // show if it's not too big
+              markcanvas.selectAll("text").each(function(d) {
+                var label = d3.select(this);
+                if ((transform.k) / (label.attr("ratio")) >= 0.8*(1.0 - (0.25*maxarea/label.attr("area")))) {
+                  label.attr("class", "booth-label booth-label-on");
+                } else {
+                  label.attr("class", "booth-label booth-label-off");
+                }
+              })
+          }));
+          // zoom buttons
+          d3.select('#zoom-in').on('click', function() {
+              zoom.scaleBy(floormap.transition().duration(200), 1.3);
+          });
+          d3.select('#zoom-out').on('click', function() {
+              zoom.scaleBy(floormap.transition().duration(200), 1.0 / 1.3);
+          });
+          // ----------------------------- //
+
           mapcanvas.append("svg:image")
               .attr("xlink:href", "http:" + results.mapGraphic.url)
               .attr("width", parseFloat(results.mapGraphic.width) / parseFloat(results.transforms[0].d))
@@ -195,9 +216,9 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
               if (booth.exhibitors.length > 0) {
                 var label = markcanvas.append("text")
                     .attr("x", centerOfMass.x)
-                    .attr("y", centerOfMass.y + 5.0)
-                    .attr('font-size', 6.0)
-                    .attr('stroke-width', 0.4)
+                    .attr("y", centerOfMass.y + 0.5)
+                    .attr('font-size', _fontSize)
+                    .attr('stroke-width', _outline)
                     .attr("ng-click", "vm.boothClick('" + booth.boothID + "')")
                     .attr("data-exhibid", booth.boothID)
                     .text(booth.exhibitors.map(function(exhibitor) {
@@ -218,6 +239,10 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           }).sort(function(a, b) {
               return (a.exhibitors[0].exhibName > b.exhibitors[0].exhibName) ? 1 : -1;
           });
+
+          // translate everything to fit window
+          mapcanvas.selectAll("*").attr("transform", "translate(" + transx + ", " + (-1.0 * transy) + ") scale(" + transcale + ")");
+          markcanvas.selectAll("*").attr("transform", "translate(" + transx + ", " + (-1.0 * transy) + ") scale(" + transcale + ")");
 
           //return booths
           deferred.resolve(_booths);
@@ -324,9 +349,6 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest
         });
       });
       // ------------------------------------------------- //
-
-      console.log("bounding box", d3.select("#path" + boothID).node().getBBox());
-      console.log("g", d3.select("#zoomCanvas").attr('transform'));
 
       // alert(vm.boothDict[boothID].exhibitors.map(function(exhibitor) {return exhibitor.exhibName}).join(',  '));
     };
