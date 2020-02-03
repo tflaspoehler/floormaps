@@ -6,10 +6,10 @@
 	</title>
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" type="text/css" href="https://www.americasmart.com/hubfs/www/includes/css/styles.css">
+	<meta name="viewport" content= "width=device-width, user-scalable=no">
 </head>
 <body class="background">
-	<div class="grid-wrapper container" ng-app="mapApp" ng-controller="mapAppController as vm">
-		<div>
+	<div class="grid-wrapper container" ng-app="mapApp" ng-controller="mapAppController as vm" style="height: 100%">
 			<div class="map-container" id="map-canvas">
 				<svg id="floormaps">
 					<g id="zoomCanvas" transform="translate(0,0) scale(1)">
@@ -65,7 +65,6 @@
 					<div class="search-clear" ng-if="vm.exhibitorSearch" ng-click="vm.clearSearch()"></div>
 				</div>
 			</div>
-		</div>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.min.js"></script>

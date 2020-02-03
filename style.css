@@ -30,7 +30,7 @@ html, body {
 	vertical-align: middle;
   /* ensure 1:1 aspect ratio, tweak 50 to make SVG larger */
   width: 100%;
-  height: 100vmin;  
+  height: 100%;  
   /* set some maximum size (width and height need to match
    * aspect ratio, 1:1 in this case */
   max-width: 100%;
@@ -90,7 +90,7 @@ html, body {
 	display: block;
 	padding: 0.5em;
 	height: 1em;
-	width: 1em;
+	/* width: 1em; */
 	text-align: center;
 	cursor: pointer;
 	font-weight: bold;
@@ -150,6 +150,8 @@ html, body {
 #search-icon input {
 	display: inline-block;
 	font-size: 1.25em;
+	line-height: 2;
+	height: 2em;
 	padding: 0.5em;
 	border-width: 0 0 1px 0;
 	box-sizing: border-box;
@@ -223,7 +225,7 @@ html, body {
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     outline: none;
     cursor: pointer;
-	transition: left 0.5s ease-in-out;
+	transition: all 0.5s ease-in-out;
 	left: 0;
 }
 #search-checkbox + .search-checkbox:hover {
@@ -252,7 +254,7 @@ html, body {
 	top: 2.75em;
 	bottom: 0;
 	left: 0;
-	width: 300px !important;
+	width: 300px;
 	height: auto !important;
 	background-color: #fff;
 	box-sizing: border-box;
@@ -310,3 +312,41 @@ html, body {
 	display: none;
 }
 
+@media screen and (max-width: 980px) {
+	.search-menu {
+		width: 100%;
+		font-size: 1.25em;
+		bottom: 0;
+	}
+	.selected-booths {
+		width: 100% !important;
+	}
+	.search-checkbox {
+		transform: rotate(-90deg) translateX(-7px);
+	}
+	#search-checkbox + .search-checkbox {
+		font-size: 0.95em;
+		bottom: 50%;
+		right: 1.5em;
+		top: initial;
+		left: initial !important;
+	}
+	#search-checkbox + .search-checkbox + div {
+		top: initial;
+		left: initial;
+		height: 50%;
+		max-height: 4.25em;
+	}
+	#search-checkbox:checked + .search-checkbox + div {
+		max-height: 50%;
+	}
+	#search-checkbox + .search-checkbox {
+		bottom: 5em;
+	}
+	#search-checkbox:checked + .search-checkbox {
+		bottom: 50%;
+	}
+	.zoom-menu {
+		display: none;
+	}
+}
