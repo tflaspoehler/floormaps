@@ -112,6 +112,9 @@ mapApp.service('boothService', ['$http', '$q', function($http, $q) {
           floormap.attr("viewBox", "0 0 " + containerBox.width + " "  + containerBox.height);
           floormap.classed("svg-content", true);
           floormap.selectAll("g > *").remove();
+          d3.select(window).on("resize", function() {
+              floormap.attr("viewBox", "0 0 " + container.node().getBoundingClientRect().width + " "  + container.node().getBoundingClientRect().height); 
+          });
 
           // add zooming
           var zoom = d3.zoom()
