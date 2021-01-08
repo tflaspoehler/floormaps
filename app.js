@@ -7,9 +7,13 @@ mapApp = angular.module("mapApp", ['ngRoute']);
 // change scope templating string to insert angular stuff from ${} to    //
 //      without this hubspot will not play nice with angular             //
 //-----------------------------------------------------------------------//
-mapApp.config(['$interpolateProvider', function($interpolateProvider) {
+mapApp.config(['$interpolateProvider', '$locationProvider', function($interpolateProvider, $locationProvider) {
     $interpolateProvider.startSymbol('//');
     $interpolateProvider.endSymbol('//');
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false
+    });
 }]);
 //-------------------------------------------------------------------//
 
@@ -302,7 +306,7 @@ mapApp.factory('getExhibitor', ['$http', '$q', function($http, $q) {
 //-----------------------------------------------------------------------//
 //      controller to sends AJAX request and returns it to the view      //
 //-----------------------------------------------------------------------//
-mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', '$routeParams', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, $routeParams, getRequest, boothService, getExhibitor) {
+mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', '$location', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, $location, getRequest, boothService, getExhibitor) {
     var vm = this;
     var floormap = d3.select("#floormaps");
     vm.building = 2;
@@ -311,9 +315,12 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', '$routePara
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
     vm.searchMenu = true;
-    console.log($routeParams);
-    if ($routeParams.hasOwnProperty('building')) {
-      console.log('building');
+    console.log($location.search());
+    if ( $location.search().hasOwnProperty( 'building' ) ) {
+      vm.building = $location.search()['building'];
+    }
+    if ( $location.search().hasOwnProperty( 'floor' ) ) {
+      vm.floor = $location.search()['floor'];
     }
     boothService.getBooths(vm.building, vm.floor).then(function(booths) {
       var bts = {};
