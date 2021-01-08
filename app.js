@@ -302,15 +302,19 @@ mapApp.factory('getExhibitor', ['$http', '$q', function($http, $q) {
 //-----------------------------------------------------------------------//
 //      controller to sends AJAX request and returns it to the view      //
 //-----------------------------------------------------------------------//
-mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, getRequest, boothService, getExhibitor) {
+mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', '$routeParams', 'getRequest', 'boothService', 'getExhibitor', function directoryController($scope, $sce, $compile, $routeParams, getRequest, boothService, getExhibitor) {
     var vm = this;
     var floormap = d3.select("#floormaps");
     vm.building = 2;
-    vm.floor = 9;
+    vm.floor = 2;
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
     vm.searchMenu = true;
+    console.log($routeParams);
+    if ($routeParams.hasOwnProperty('building')) {
+      console.log('building');
+    }
     boothService.getBooths(vm.building, vm.floor).then(function(booths) {
       var bts = {};
       booths.forEach(function(booth) {
