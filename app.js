@@ -310,7 +310,7 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', '$location'
     var vm = this;
     var floormap = d3.select("#floormaps");
     vm.building = 2;
-    vm.floor = 2;
+    vm.floor = 9;
     vm.booths = [];
     vm.selectedBooth = null;
     vm.selectedExhibitors = [];
