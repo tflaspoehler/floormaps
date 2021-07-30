@@ -334,6 +334,9 @@ mapApp.controller("mapAppController", ['$scope', '$sce', '$compile', '$location'
     });
     vm.boothClick = function(boothID) {
       var boothPath =  d3.select("#path" + boothID);
+      var clippy = document.getElementsByClassName("search-input")[0];
+      clippy.select();
+      document.execCommand("copy");
       vm.searchMenu = true;
       if (vm.selectedBooth) {
         vm.selectedExhibitors = [];
